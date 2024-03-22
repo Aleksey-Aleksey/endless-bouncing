@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: min(70vh, 80%);
+  max-width: 600px;
+  height: 100%;
+  margin: 50px auto 0;
+}
+
+canvas {
+  display: block;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.score {
+  font-size: 22px;
+  color: rgb(206, 204, 204);
+}
