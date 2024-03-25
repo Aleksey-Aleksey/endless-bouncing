@@ -20,4 +20,13 @@ canvas {
 .score {
   font-size: 22px;
   color: rgb(206, 204, 204);
+
+  &--violet {
+    color: #4E418C;
+  }
+
+  &--yellow {
+    color: #F9Ab2D;
+  }
 }
+

@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 
 const COLOR = {
-  yellow: '#4E418C',
-  violet: '#F9Ab2D',
+  yellow: '#F9Ab2D',
+  violet: '#4E418C',
 };
 
 const MOVING_TILE_SIZE = 38;
 
 const MOVING_TILE_COLOR = {
-  viloet: COLOR.violet,
+  violet: COLOR.violet,
   yellow: COLOR.yellow,
 };
 
@@ -24,16 +24,15 @@ const FIELD_COLOR = {
 };
 
 export const App = () => {
+  const [yellowScore, setYellowScore] = useState(0);
+  const [violetScore, setVioletScore] = useState(0);
+
   useEffect(() => {
     const canvas = document.querySelector('.fieldCanvas');
     const ctx = canvas.getContext('2d');
-    const scoreElement = document.querySelector('.score');
 
     const numSquaresX = canvas.width / MOVING_TILE_SIZE;
     const numSquaresY = canvas.height / MOVING_TILE_SIZE;
-
-    let violetScore = 0;
-    let yellowScore = 0;
 
     const squares = [];
 
@@ -42,7 +41,7 @@ export const App = () => {
       squares[i] = [];
       for (let j = 0; j < numSquaresY; j++) {
         squares[i][j] =
-          i < numSquaresX / 2 ? FIELD_COLOR.yellow : FIELD_COLOR.violet;
+          i < numSquaresX / 2 ? FIELD_COLOR.violet : FIELD_COLOR.yellow;
       }
     }
 
@@ -52,16 +51,16 @@ export const App = () => {
         y: canvas.height / 2,
         dx: 8,
         dy: -8,
-        reverseColor: FIELD_COLOR.yellow,
-        ballColor: MOVING_TILE_COLOR.violet,
+        reverseColor: FIELD_COLOR.violet,
+        ballColor: MOVING_TILE_COLOR.yellow,
       },
       {
         x: (canvas.width / 4) * 3,
         y: canvas.height / 2,
         dx: -8,
         dy: 8,
-        reverseColor: FIELD_COLOR.violet,
-        ballColor: MOVING_TILE_COLOR.yellow,
+        reverseColor: FIELD_COLOR.yellow,
+        ballColor: MOVING_TILE_COLOR.violet,
       },
     ];
 
@@ -76,8 +75,8 @@ export const App = () => {
     };
 
     function drawSquares() {
-      violetScore = 0;
-      yellowScore = 0;
+      setVioletScore(0);
+      setYellowScore(0);
 
       for (let i = 0; i < numSquaresX; i++) {
         for (let j = 0; j < numSquaresY; j++) {
@@ -90,8 +89,13 @@ export const App = () => {
           );
 
           // Update scores
-          if (squares[i][j] === FIELD_COLOR.yellow) violetScore++;
-          if (squares[i][j] === FIELD_COLOR.violet) yellowScore++;
+          if (squares[i][j] === FIELD_COLOR.violet) {
+            setVioletScore(prevVal => prevVal + 1);
+          }
+          if (squares[i][j] === FIELD_COLOR.yellow) {
+            setYellowScore(prevVal => prevVal + 1);
+          };
+          
         }
       }
     };
@@ -163,9 +167,6 @@ export const App = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawSquares();
 
-      scoreElement.innerHTML = `<span style="color: ${COLOR.yellow}">${violetScore}</span>\n
-        x <span style="color: ${COLOR.violet}">${yellowScore}</span>`;
-
       tiles.forEach((movingTile) => {
         drawMovingTile(movingTile);
         checkSquareCollision(movingTile);
@@ -185,7 +186,9 @@ export const App = () => {
   return (
     <div className="container">
       <canvas className="fieldCanvas" width="600" height="600"></canvas>
-      <div className="score"></div>
+      <span className='score score--violet'>{violetScore}</span>
+      <span className='score'> x </span>
+      <span className='score score--yellow'>{yellowScore}</span>
     </div>
   );
 };
